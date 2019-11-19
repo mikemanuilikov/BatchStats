@@ -6,9 +6,7 @@
 
   <ItemGroup>
     <Folder Include="Commands\" />
-    <Folder Include="Infrastructure\" />
     <Folder Include="Cache\" />
-    <Folder Include="Queries\" />
   </ItemGroup>
 
   <ItemGroup>

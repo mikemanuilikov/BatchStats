@@ -34,7 +34,7 @@ namespace BatchStats
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<CalcDataHub>("/calc-data");
+                endpoints.MapHub<CalcDataHub>("/calc-data/hub");
             });
         }
 

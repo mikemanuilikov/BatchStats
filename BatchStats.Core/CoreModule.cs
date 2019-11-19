@@ -1,7 +1,9 @@
-﻿using BatchStats.Core.Interfaces;
+﻿using BatchStats.Core.Infrastructure;
+using BatchStats.Core.Interfaces;
+using BatchStats.Core.Queries;
 using BatchStats.Core.Services;
+using BatchStats.Models;
 using Microsoft.Extensions.DependencyInjection;
-using MongoDB.Driver;
 
 namespace BatchStats.Core
 {
@@ -12,7 +14,8 @@ namespace BatchStats.Core
             services.AddMemoryCache();
             services.AddSingleton<ICacheAccessor, CacheAccessor>();
             services.AddSingleton<IEventBus, EventBus>();
-          
+            services.AddTransient<IQueryHandler<GetCaclDataQuery, CalcData[]>, GetCalcDataQueryHandler>();
+            services.AddTransient<IQueryDispatcher, QueryDispatcher>();
         }
     }
 }
