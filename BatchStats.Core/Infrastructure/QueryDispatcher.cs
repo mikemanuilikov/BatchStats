@@ -8,9 +8,9 @@ namespace BatchStats.Core.Infrastructure
     {
         private readonly IServiceProvider services;
 
-        public QueryDispatcher(IServiceProvider componentContext)
+        public QueryDispatcher(IServiceProvider services)
         {
-            this.services = componentContext;
+            this.services = services;
         }
 
         public async Task<TResult> ExecuteAsync<TResult>(IQuery<TResult> query)

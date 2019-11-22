@@ -8,6 +8,6 @@
 
         public string Value { get; set; }
 
-        public long BatchStartTime { get; set; }
+        public long BatchTimestamp { get; set; }
     }
 }

@@ -13,8 +13,8 @@ namespace BatchStats.Api.Controllers
             this.eventBus = eventBus;
         }
 
-        [HttpPost("sensors/push")]
-        public IActionResult PushDataPoint(DataPoint dataPoint)
+        [HttpPost("sensors/telemetry")]
+        public IActionResult AddTelemetry([FromBody]DataPoint dataPoint)
         {
             eventBus.Publish(EventTopic.RawData, dataPoint);
 

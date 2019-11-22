@@ -1,37 +1,29 @@
 ﻿using BatchStats.Core.Interfaces;
 using BatchStats.Models;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace BatchStats.Core.Services
 {
     public class EventBus : IEventBus
     {
-        private readonly IDictionary<EventTopic, ICollection<IEventSubscriber>> subscribers;
+        private readonly List<IEventSubscriber> subscribers;
 
-        public EventBus()
+        public EventBus(IEnumerable<IEventSubscriber> subscribers)
         {
-            subscribers = new Dictionary<EventTopic, ICollection<IEventSubscriber>>();
+            this.subscribers = subscribers.ToList();
         }
 
         public void Publish(EventTopic topic, IMessage message)
         {
-            if (subscribers.ContainsKey(topic))
-            {
-                Parallel.ForEach(subscribers[topic], async subscriber => await subscriber.HandleAsync(message));
-            }
+            Parallel.ForEach(subscribers.Where(x => x.Topic == topic),
+                async subscriber => await subscriber.HandleAsync(message));
         }
 
-        public void Subscribe(EventTopic topic, IEventSubscriber subscriber)
+        public void Subscribe(IEventSubscriber subscriber)
         {
-            if (subscribers.ContainsKey(topic))
-            {
-                subscribers[topic].Add(subscriber);
-            }
-            else
-            {
-                subscribers.Add(topic, new IEventSubscriber[] { subscriber });
-            }
+            subscribers.Add(subscriber);
         }
     }
 }

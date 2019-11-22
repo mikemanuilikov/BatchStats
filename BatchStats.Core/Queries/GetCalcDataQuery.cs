@@ -1,5 +1,8 @@
-﻿using BatchStats.Core.Interfaces;
+﻿using BatchStats.Core.Entities;
+using BatchStats.Core.Interfaces;
+using BatchStats.Core.Options;
 using BatchStats.Models;
+using MongoDB.Driver;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,24 +16,35 @@ namespace BatchStats.Core.Queries
 
     public class GetCalcDataQueryHandler : IQueryHandler<GetCaclDataQuery, CalcData[]>
     {
-        public Task<CalcData[]> HandleAsync(GetCaclDataQuery query)
+        private readonly IDbSettings dbSettings;
+        private readonly IMongoDatabase db;
+
+        public GetCalcDataQueryHandler(IDbSettings dbSettings, IMongoDatabase db)
         {
-            var rand = new Random();
-            long minTime = DateTimeOffset.UtcNow.Subtract(TimeSpan.FromDays(100)).ToUnixTimeSeconds();
+            this.dbSettings = dbSettings;
+            this.db = db;
+        }
 
-            var calcData = Enumerable
-                            .Range(1, 1000000)
-                            .Select(x => new CalcData
-                            {
-                                BatchId = x.ToString(),
-                                SensorId = rand.Next(1, 5).ToString(),
-                                Average = rand.Next(20, 40).ToString(),
-                                StandardDeviation = rand.Next(0, 5).ToString(),
-                                BatchStartTime = minTime + rand.Next(1000, 1000000000)
-                            })
-                            .ToArray();
+        public async Task<CalcData[]> HandleAsync(GetCaclDataQuery query)
+        {
+            var month = TimeSpan.FromDays(30);
+            long defaultStartTime = DateTimeOffset.UtcNow.Subtract(month).ToUnixTimeSeconds();
+            long startTime = query.StartTime?.ToUnixTimeSeconds() ?? defaultStartTime;
 
-            return Task.FromResult(calcData);
+            var results = await db.GetCollection<Aggregation>(dbSettings.AggregationsCollectionName)
+                            .Find(x => x.BatchStartTime >= startTime)
+                            .ToListAsync();
+
+            return results
+                    .Select(x => new CalcData
+                    {
+                        BatchId = x.BatchId,
+                        SensorId = x.SensorId,
+                        Average = x.Average,
+                        StandardDeviation = x.StandardDeviation,
+                        BatchStartTime = x.BatchStartTime
+                    })
+                    .ToArray();
         }
     }
 }

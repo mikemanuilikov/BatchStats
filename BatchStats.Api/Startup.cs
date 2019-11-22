@@ -4,6 +4,7 @@ using BatchStats.Core;
 using BatchStats.Core.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
@@ -11,15 +12,23 @@ namespace BatchStats
 {
     public class Startup
     {
+        private readonly IConfiguration configuration;
+
+        public Startup(IConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             foreach (var module in GetDIModules())
             {
-                module.ConfigureServices(services);
+                module.ConfigureServices(services, configuration);
             }
 
-            services.AddMvc(options => options.EnableEndpointRouting = false);
+            services.AddCors(options => options.AddDefaultPolicy(x => x.AllowAnyOrigin()));
             services.AddSignalR();
+            services.AddControllers();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -29,12 +38,13 @@ namespace BatchStats
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseCors();
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<CalcDataHub>("/calc-data/hub");
+                endpoints.MapHub<CalcDataHub>("/hub/calc-data");
             });
         }
 

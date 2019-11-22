@@ -4,7 +4,7 @@ namespace BatchStats.Core.Interfaces
 {
     public interface IEventBus
     {
-        void Subscribe(EventTopic topic, IEventSubscriber subscriber);
+        void Subscribe(IEventSubscriber subscriber);
 
         void Publish(EventTopic topic, IMessage message);
     }
