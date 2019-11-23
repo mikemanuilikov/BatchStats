@@ -5,16 +5,17 @@ using System.Threading.Tasks;
 
 namespace BatchStats.Core.Subscribers
 {
-    public class RawTelemetrySubscriber : IEventSubscriber
+    public class RawTelemetryWriter : IEventSubscriber
     {
         private readonly ICommandDispatcher dispatcher;
 
         public EventTopic Topic { get; }
 
-        public RawTelemetrySubscriber(ICommandDispatcher dispatcher)
+        public RawTelemetryWriter(ICommandDispatcher dispatcher)
         {
-            this.dispatcher = dispatcher;
             Topic = EventTopic.RawData;
+
+            this.dispatcher = dispatcher;
         }
 
         public async Task HandleAsync(IMessage message)

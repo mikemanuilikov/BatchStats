@@ -2,6 +2,7 @@
 using BatchStats.Core.Infrastructure;
 using BatchStats.Core.Interfaces;
 using BatchStats.Core.Queries;
+using BatchStats.Core.Services;
 using BatchStats.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,6 +18,10 @@ namespace BatchStats.Core
 
             services.AddTransient<IQueryHandler<GetCaclDataQuery, CalcData[]>, GetCalcDataQueryHandler>();
             services.AddTransient<ICommandHandler<AddTelemetryCommand>, AddTelemetryCommandHandler>();
+            services.AddTransient<ICommandHandler<AddAggregationsCommand>, AddAggregationsCommandHandler>();
+
+            services.AddTransient<IBatchCachingService, BatchCachingService>();
+            services.AddTransient<ICalcService, CalcService>();
         }
     }
 }

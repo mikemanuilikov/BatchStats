@@ -13,7 +13,7 @@ namespace BatchStats.Core.Entities
 
         public string SensorId { get; set; }
 
-        public string Value { get; set; }
+        public decimal Value { get; set; }
 
         [BsonRepresentation(BsonType.Int64)]
         public long BatchTimestamp { get; set; }

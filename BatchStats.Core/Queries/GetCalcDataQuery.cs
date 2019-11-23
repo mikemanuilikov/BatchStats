@@ -32,7 +32,7 @@ namespace BatchStats.Core.Queries
             long startTime = query.StartTime?.ToUnixTimeSeconds() ?? defaultStartTime;
 
             var results = await db.GetCollection<Aggregation>(dbSettings.AggregationsCollectionName)
-                            .Find(x => x.BatchStartTime >= startTime)
+                            .Find(x => x.BatchStartTime >= startTime && x.SensorId == "Temperature")
                             .ToListAsync();
 
             return results

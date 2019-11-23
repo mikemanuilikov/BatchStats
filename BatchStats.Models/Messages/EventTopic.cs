@@ -2,7 +2,9 @@
 {
     public enum EventTopic : short
     {
-        RawData = 0,
-        CalcData = 2
+        Default = 0,
+        RawData = 1,
+        BatchData = 2,
+        CalcData = 4
     }
 }

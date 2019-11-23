@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using BatchStats.Core.Services;
 using BatchStats.Core.Subscribers;
+using BatchStats.Api.Hubs;
 
 namespace BatchStats.Api
 {
@@ -15,15 +16,24 @@ namespace BatchStats.Api
         {
             services.Configure<DbSettings>(configuration.GetSection(nameof(DbSettings)));
             services.AddSingleton<IDbSettings>(sp => sp.GetRequiredService<IOptions<DbSettings>>().Value);
+            
+            services.Configure<BatchSettings>(configuration.GetSection(nameof(BatchSettings)));
+            services.AddSingleton<IBatchSettings>(sp => sp.GetRequiredService<IOptions<BatchSettings>>().Value);
 
             services.AddSingleton<IMongoClient>(sp => new MongoClient(sp.GetService<IDbSettings>().ConnectionString));
             services.AddTransient<IMongoDatabase>(sp => sp.GetService<IMongoClient>().GetDatabase(sp.GetService<IDbSettings>().DatabaseName));
 
             services.AddMemoryCache();
             services.AddSingleton<ICacheAccessor, CacheAccessor>();
-            services.AddSingleton<IEventBus, EventBus>();
+           
 
-            services.AddSingleton<IEventSubscriber, RawTelemetrySubscriber>();
+            services.AddSingleton<IEventSubscriber, RawTelemetryWriter>();
+            services.AddSingleton<IEventSubscriber, RawTelemetryProcessor>();
+            services.AddSingleton<IEventSubscriber, BatchStatsCalculator>();
+            services.AddSingleton<IEventSubscriber, AggregationsWriter>();
+            services.AddSingleton<IEventSubscriber, AggregationsNotifier>();
+
+            services.AddSingleton<IEventBus, EventBus>();
         }
     }
 }

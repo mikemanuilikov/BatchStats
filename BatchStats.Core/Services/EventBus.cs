@@ -1,6 +1,9 @@
 ﻿using BatchStats.Core.Interfaces;
 using BatchStats.Models;
+using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,15 +13,24 @@ namespace BatchStats.Core.Services
     {
         private readonly List<IEventSubscriber> subscribers;
 
-        public EventBus(IEnumerable<IEventSubscriber> subscribers)
+        public EventBus()
         {
-            this.subscribers = subscribers.ToList();
+            subscribers = new List<IEventSubscriber>();
         }
 
         public void Publish(EventTopic topic, IMessage message)
         {
-            Parallel.ForEach(subscribers.Where(x => x.Topic == topic),
-                async subscriber => await subscriber.HandleAsync(message));
+            Parallel.ForEach(subscribers.Where(x => x.Topic == topic), async subscriber =>
+            {
+                try
+                {
+                    await subscriber.HandleAsync(message);
+                }
+                catch (Exception)
+                {
+                    //todo: logs
+                }
+            });
         }
 
         public void Subscribe(IEventSubscriber subscriber)

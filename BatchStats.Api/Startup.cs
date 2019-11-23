@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Collections.Generic;
 
 namespace BatchStats
 {
@@ -26,12 +27,16 @@ namespace BatchStats
                 module.ConfigureServices(services, configuration);
             }
 
-            services.AddCors(options => options.AddDefaultPolicy(x => x.AllowAnyOrigin()));
+            services.AddCors(options => options.AddDefaultPolicy(x => 
+                                            x.AllowCredentials()
+                                            .AllowAnyHeader()
+                                            .AllowAnyMethod()
+                                            .WithOrigins("http://localhost:3000")));
             services.AddSignalR();
             services.AddControllers();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IEventBus eventBus, IEnumerable<IEventSubscriber> subscribers)
         {
             if (env.IsDevelopment())
             {
@@ -44,8 +49,13 @@ namespace BatchStats
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<CalcDataHub>("/hub/calc-data");
+                endpoints.MapHub<AggregationsHub>("/hub/aggregations");
             });
+
+            foreach (var subscriber in subscribers)
+            {
+                eventBus.Subscribe(subscriber);
+            }
         }
 
         private IModule[] GetDIModules()

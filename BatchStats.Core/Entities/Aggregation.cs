@@ -16,8 +16,8 @@ namespace BatchStats.Core.Entities
 
         public string SensorId { get; set; }
 
-        public string Average { get; set; }
+        public decimal Average { get; set; }
 
-        public string StandardDeviation { get; set; }
+        public decimal StandardDeviation { get; set; }
     }
 }
