@@ -76,17 +76,12 @@ class LineChart extends React.Component {
           <XAxis
             axisAt="bottom"
             orient="bottom"
-            //ticks={5}
-          //  tickInterval={5}
             stroke="rgb(211, 194, 38)"
             tickStroke="rgb(211, 194, 38)"
           />
           <YAxis
             axisAt="right"
             orient="right"
-            // tickInterval={5}
-            // tickValues={[40, 60]}
-            //ticks={5}
             stroke="rgb(211, 194, 38)"
             tickStroke="rgb(211, 194, 38)"
           />
@@ -110,13 +105,11 @@ class LineChart extends React.Component {
             tooltipContent={tooltipContent([
               {
                 label: 'Average',
-                value: d => numberFormat(d.average),
-               // stroke: 'rgb(235, 215, 37)'
+                value: d => numberFormat(d.average)
               },
               {
                 label: 'Standard Deviation',
-                value: d => numberFormat(d.standardDeviation),
-               // stroke: 'rgb(78, 173, 250)'
+                value: d => numberFormat(d.standardDeviation)
               }
             ])}
             fontSize={15}

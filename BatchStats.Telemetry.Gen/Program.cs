@@ -29,7 +29,9 @@ namespace BatchStats.Telemetry.Gen
             {
                 int batchId = (int)(DateTimeOffset.UtcNow.ToUnixTimeSeconds() % 10000);
 
-                for (int i = 0; i < rand.Next(2, 7); i++)
+                var batchStages = rand.Next(1, 5);
+
+                for (int i = 0; i < batchStages; i++)
                 {
                     var temperature = new DataPoint
                     {
@@ -62,8 +64,8 @@ namespace BatchStats.Telemetry.Gen
                     await SendTelemetry(temperature);
                     await SendTelemetry(rpms);
 
-                    Thread.Sleep(rand.Next(100, 1000));
-                } 
+                    Thread.Sleep(1000);
+                }
             }
         }
 

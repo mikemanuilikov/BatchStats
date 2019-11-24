@@ -17,6 +17,8 @@ An API used to push sensors data, perform and fetch aggregated batch data: [API]
 
 ### Generate sensors data
 
-Checkout this repo, compile and run `BatchStats.Telemetry.Gen` project - it will start sending simulated data (Temperature and Pressure measurements) to API.
+Checkout this repo, compile and run locally `BatchStats.Telemetry.Gen` project - it will start sending simulated data (Temperature and Pressure measurements) to API.
+
+The duration of the cycle will vary between 1 and 5 seconds for testing purposes.
 
 Please notice that only Temperature measurements are shown in a [chart](https://batchstatsapp.azurewebsites.net/) at the moment, other stored data can be retrieved with [GET /raw-data](https://batchstatsapi.azurewebsites.net/raw-data) endpoint.
