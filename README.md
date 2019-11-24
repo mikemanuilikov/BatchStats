@@ -6,7 +6,7 @@
 
 A chart with Temperature aggregations (average, standard deviation) is available [here](https://batchstatsapp.azurewebsites.net/).
 
-An API used to push sensors data, perform and fetch aggregated batch data: [API](https://batchstatsapi.azurewebsites.net/).
+An API used to push sensors data, perform calculations and fetch aggregated batch data: [API](https://batchstatsapi.azurewebsites.net/).
 
 ### Awailable endpoints
 
