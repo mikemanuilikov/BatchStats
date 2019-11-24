@@ -17,17 +17,17 @@ namespace BatchStats.Api.Controllers
             this.queryDispatcher = queryDispatcher;
         }
 
-        [HttpGet("calc-data")]
+        [HttpGet("calc-data/{sensorId?}")]
         [AllowAnonymous]
-        public async Task<CalcData[]> GetCalcData()
+        public async Task<CalcData[]> GetCalcData([FromRoute]string sensorId = "temperature")
         {
-            var month = TimeSpan.FromDays(30);
+            var month = TimeSpan.FromDays(7);
             var defaultStartTime = DateTimeOffset.UtcNow.Subtract(month);
 
             var query = new GetCaclDataQuery 
             {
                 StartTime = defaultStartTime,
-                SensorId = "Temperature"
+                SensorId = sensorId
             };
 
             return await queryDispatcher.ExecuteAsync(query);

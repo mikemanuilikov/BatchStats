@@ -11,9 +11,11 @@ An API used to push sensors data, perform and fetch aggregated batch data: [API]
 ### Awailable endpoints
 
 - [GET /raw-data](https://batchstatsapi.azurewebsites.net/raw-data) - retrieve raw sensors data
-- [GET /calc-data](https://batchstatsapi.azurewebsites.net/calc-data) - retrieve aggregated by batch data
+- [GET /calc-data](https://batchstatsapi.azurewebsites.net/calc-data/) - retrieve aggregated by batch data with optional `/sensorId` route param ("temperature/pressure")
 - [WS /hub/aggregations](https://batchstatsapi.azurewebsites.net/hub/aggregations) - subscribe to batch aggregation updates
 - [POST /sensors/telemetry](https://batchstatsapi.azurewebsites.net/sensors/telemetry) - push sensors telemetry
+
+Both raw and aggregated historical data is retrieved for last 7 days - to decrease response payload without implementing chunked fetch.
 
 ### Generate sensors data
 

@@ -26,6 +26,7 @@ class ChartComponent extends React.Component {
 
         hubConnection.on('PushBatchStats', avgData => {
           console.log('PushBatchStats got data: ', avgData);
+          if(avgData.sensorId != "Temperature") return;
           const newData = [parseData(avgData)];
           let newState = [...this.state.data, ...newData];
           if (newState.length < 1) return;

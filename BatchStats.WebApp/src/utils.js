@@ -13,7 +13,7 @@ export function parseData(item) {
 }
 
 export function getData() {
-	const promiseFetch = fetch("https://batchstatsapi.azurewebsites.net/calc-data")
+	const promiseFetch = fetch("https://batchstatsapi.azurewebsites.net/calc-data/temperature")
 		.then(response => response.json())
 		.then(dataArray => dataArray.map(parseData));
 	return promiseFetch;

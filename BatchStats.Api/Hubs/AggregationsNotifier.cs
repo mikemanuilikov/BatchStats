@@ -9,8 +9,6 @@ namespace BatchStats.Api.Hubs
     {
         private readonly IHubContext<AggregationsHub> hubContext;
 
-        private const string TargetSensorId = "Temperature";
-
         public EventTopic Topic { get; }
 
         public AggregationsNotifier(IHubContext<AggregationsHub> hubContext)
@@ -23,7 +21,7 @@ namespace BatchStats.Api.Hubs
         {
             var calcData = message as CalcData;
 
-            if (calcData != null && calcData.SensorId == TargetSensorId)
+            if (calcData != null)
             {
                 await hubContext.Clients.All.SendAsync(nameof(IAggregationsHub.PushBatchStats), calcData);
             }

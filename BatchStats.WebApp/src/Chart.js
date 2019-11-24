@@ -47,7 +47,7 @@ class LineChart extends React.Component {
     const { data, xScale, xAccessor, displayXAccessor } = xScaleProvider(
       initialData
     );
-    const xExtents = [xAccessor(last(data)), xAccessor(data[0])];
+    const xExtents = [xAccessor(last(data)), xAccessor(data[data.length - 100])];
 
     const ema50 = ema()
       .id(2)
