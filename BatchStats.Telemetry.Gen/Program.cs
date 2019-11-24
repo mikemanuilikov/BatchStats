@@ -35,14 +35,14 @@ namespace BatchStats.Telemetry.Gen
                     {
                         BatchId = batchId.ToString(),
                         SensorId = "Temperature",
-                        Value = rand.Next(50, 100),
+                        Value = rand.Next(15, 40),
                         BatchTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
                     };
 
                     var rpms = new DataPoint
                     {
                         BatchId = batchId.ToString(),
-                        SensorId = "RPMs",
+                        SensorId = "Pressure",
                         Value = rand.Next(500, 600),
                         BatchTimestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
                     };
@@ -50,7 +50,7 @@ namespace BatchStats.Telemetry.Gen
                     if (nextAnomalousEvent < DateTime.Now)
                     {
                         Console.WriteLine("**GENERATING ANOMALY!");
-                        temperature.Value = rand.Next(200, 250);
+                        temperature.Value = rand.Next(40, 60);
                         rpms.Value = rand.Next(750, 900);
                         nextAnomalousEvent = DateTime.Now.AddSeconds(30);
                     }
@@ -70,7 +70,7 @@ namespace BatchStats.Telemetry.Gen
         private static async Task SendTelemetry(DataPoint telemetry)
         {
             var stringContent = new StringContent(JsonConvert.SerializeObject(telemetry), Encoding.UTF8, "application/json");
-            await httpClient.PostAsync("https://localhost:44380/sensors/telemetry", stringContent);
+            await httpClient.PostAsync("https://batchstatsapi.azurewebsites.net/sensors/telemetry", stringContent);
         }
     }
 }

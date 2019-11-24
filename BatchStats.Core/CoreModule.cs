@@ -17,6 +17,8 @@ namespace BatchStats.Core
             services.AddTransient<ICommandDispatcher, CommandDispatcher>();
 
             services.AddTransient<IQueryHandler<GetCaclDataQuery, CalcData[]>, GetCalcDataQueryHandler>();
+            services.AddTransient<IQueryHandler<GetRawDataQuery, DataPoint[]>, GetRawDataQueryHandler>();
+
             services.AddTransient<ICommandHandler<AddTelemetryCommand>, AddTelemetryCommandHandler>();
             services.AddTransient<ICommandHandler<AddAggregationsCommand>, AddAggregationsCommandHandler>();
 

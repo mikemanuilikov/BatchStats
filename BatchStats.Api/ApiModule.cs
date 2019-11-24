@@ -7,6 +7,7 @@ using Microsoft.Extensions.Options;
 using BatchStats.Core.Services;
 using BatchStats.Core.Subscribers;
 using BatchStats.Api.Hubs;
+using System.Security.Authentication;
 
 namespace BatchStats.Api
 {
@@ -20,7 +21,14 @@ namespace BatchStats.Api
             services.Configure<BatchSettings>(configuration.GetSection(nameof(BatchSettings)));
             services.AddSingleton<IBatchSettings>(sp => sp.GetRequiredService<IOptions<BatchSettings>>().Value);
 
-            services.AddSingleton<IMongoClient>(sp => new MongoClient(sp.GetService<IDbSettings>().ConnectionString));
+            services.AddSingleton<IMongoClient>(sp =>
+            {
+                var settings = MongoClientSettings.FromConnectionString(sp.GetService<IDbSettings>().ConnectionString);
+                settings.SslSettings = new SslSettings { EnabledSslProtocols = SslProtocols.Tls12 };
+
+                return new MongoClient(settings);
+            });
+
             services.AddTransient<IMongoDatabase>(sp => sp.GetService<IMongoClient>().GetDatabase(sp.GetService<IDbSettings>().DatabaseName));
 
             services.AddMemoryCache();

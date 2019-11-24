@@ -4,7 +4,7 @@ function parseTime(unixTsSec) {
 	return date;
 };
 
-function parseData(item) {
+export function parseData(item) {
 	return {
 		batchStartTime : parseTime(item.batchStartTime),
 		average : item.average,
@@ -13,7 +13,7 @@ function parseData(item) {
 }
 
 export function getData() {
-	const promiseFetch = fetch("https://localhost:44380/calc-data")
+	const promiseFetch = fetch("https://batchstatsapi.azurewebsites.net/calc-data")
 		.then(response => response.json())
 		.then(dataArray => dataArray.map(parseData));
 	return promiseFetch;

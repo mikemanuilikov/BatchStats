@@ -27,11 +27,12 @@ namespace BatchStats
                 module.ConfigureServices(services, configuration);
             }
 
-            services.AddCors(options => options.AddDefaultPolicy(x => 
+            services.AddCors(options => options.AddDefaultPolicy(x =>
                                             x.AllowCredentials()
                                             .AllowAnyHeader()
                                             .AllowAnyMethod()
                                             .WithOrigins("http://localhost:3000")));
+
             services.AddSignalR();
             services.AddControllers();
         }

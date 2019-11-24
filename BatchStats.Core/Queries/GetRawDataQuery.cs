@@ -9,40 +9,39 @@ using System.Threading.Tasks;
 
 namespace BatchStats.Core.Queries
 {
-    public class GetCaclDataQuery : IQuery<CalcData[]>
+    public class GetRawDataQuery : IQuery<DataPoint[]>
     {
         public DateTimeOffset StartTime { get; set; }
 
         public string SensorId { get; set; }
     }
 
-    public class GetCalcDataQueryHandler : IQueryHandler<GetCaclDataQuery, CalcData[]>
+    public class GetRawDataQueryHandler : IQueryHandler<GetRawDataQuery, DataPoint[]>
     {
         private readonly IDbSettings dbSettings;
         private readonly IMongoDatabase db;
 
-        public GetCalcDataQueryHandler(IDbSettings dbSettings, IMongoDatabase db)
+        public GetRawDataQueryHandler(IDbSettings dbSettings, IMongoDatabase db)
         {
             this.dbSettings = dbSettings;
             this.db = db;
         }
 
-        public async Task<CalcData[]> HandleAsync(GetCaclDataQuery query)
+        public async Task<DataPoint[]> HandleAsync(GetRawDataQuery query)
         {
             long startTime = query.StartTime.ToUnixTimeSeconds();
 
-            var results = await db.GetCollection<Aggregation>(dbSettings.AggregationsCollectionName)
-                            .Find(x => x.BatchStartTime >= startTime && x.SensorId == query.SensorId)
+            var results = await db.GetCollection<RawTelemetry>(dbSettings.RawTelemetryCollectionName)
+                            .Find(x => x.BatchTimestamp >= startTime && x.SensorId == query.SensorId)
                             .ToListAsync();
 
             return results
-                    .Select(x => new CalcData
+                    .Select(x => new DataPoint
                     {
                         BatchId = x.BatchId,
                         SensorId = x.SensorId,
-                        Average = x.Average,
-                        StandardDeviation = x.StandardDeviation,
-                        BatchStartTime = x.BatchStartTime
+                        Value = x.Value,
+                        BatchTimestamp = x.BatchTimestamp
                     })
                     .ToArray();
         }

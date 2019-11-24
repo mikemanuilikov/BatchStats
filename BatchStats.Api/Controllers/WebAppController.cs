@@ -19,11 +19,31 @@ namespace BatchStats.Api.Controllers
 
         [HttpGet("calc-data")]
         [AllowAnonymous]
-        public async Task<CalcData[]> GetCalcData(DateTimeOffset? startTime = null)
+        public async Task<CalcData[]> GetCalcData()
         {
+            var month = TimeSpan.FromDays(30);
+            var defaultStartTime = DateTimeOffset.UtcNow.Subtract(month);
+
             var query = new GetCaclDataQuery 
             {
-                StartTime = startTime
+                StartTime = defaultStartTime,
+                SensorId = "Temperature"
+            };
+
+            return await queryDispatcher.ExecuteAsync(query);
+        }
+
+        [HttpGet("raw-data")]
+        [AllowAnonymous]
+        public async Task<DataPoint[]> GetRawData()
+        {
+            var month = TimeSpan.FromDays(30);
+            var defaultStartTime = DateTimeOffset.UtcNow.Subtract(month);
+
+            var query = new GetRawDataQuery
+            {
+                StartTime = defaultStartTime,
+                SensorId = "Temperature"
             };
 
             return await queryDispatcher.ExecuteAsync(query);

@@ -16,8 +16,10 @@ namespace BatchStats.Core.Entities
 
         public string SensorId { get; set; }
 
+        [BsonRepresentation(BsonType.Decimal128)]
         public decimal Average { get; set; }
 
+        [BsonRepresentation(BsonType.Decimal128)]
         public decimal StandardDeviation { get; set; }
     }
 }

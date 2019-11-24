@@ -13,6 +13,7 @@ namespace BatchStats.Core.Entities
 
         public string SensorId { get; set; }
 
+        [BsonRepresentation(BsonType.Decimal128)]
         public decimal Value { get; set; }
 
         [BsonRepresentation(BsonType.Int64)]

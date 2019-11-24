@@ -286,6 +286,3 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 /deploy
-
-# Ignore appsettings.json files since ConfigHeaven handles it automatically
-**/appsettings.json
