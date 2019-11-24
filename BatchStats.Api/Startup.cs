@@ -31,7 +31,7 @@ namespace BatchStats
                                             x.AllowCredentials()
                                             .AllowAnyHeader()
                                             .AllowAnyMethod()
-                                            .WithOrigins("http://localhost:3000")));
+                                            .WithOrigins("https://batchstatsapp.azurewebsites.net/")));
 
             services.AddSignalR();
             services.AddControllers();

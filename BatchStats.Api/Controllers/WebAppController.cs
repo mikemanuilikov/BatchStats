@@ -37,13 +37,12 @@ namespace BatchStats.Api.Controllers
         [AllowAnonymous]
         public async Task<DataPoint[]> GetRawData()
         {
-            var month = TimeSpan.FromDays(30);
-            var defaultStartTime = DateTimeOffset.UtcNow.Subtract(month);
+            var week = TimeSpan.FromDays(7);
+            var defaultStartTime = DateTimeOffset.UtcNow.Subtract(week);
 
             var query = new GetRawDataQuery
             {
-                StartTime = defaultStartTime,
-                SensorId = "Temperature"
+                StartTime = defaultStartTime
             };
 
             return await queryDispatcher.ExecuteAsync(query);

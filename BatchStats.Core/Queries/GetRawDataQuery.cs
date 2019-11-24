@@ -12,8 +12,6 @@ namespace BatchStats.Core.Queries
     public class GetRawDataQuery : IQuery<DataPoint[]>
     {
         public DateTimeOffset StartTime { get; set; }
-
-        public string SensorId { get; set; }
     }
 
     public class GetRawDataQueryHandler : IQueryHandler<GetRawDataQuery, DataPoint[]>
@@ -32,7 +30,7 @@ namespace BatchStats.Core.Queries
             long startTime = query.StartTime.ToUnixTimeSeconds();
 
             var results = await db.GetCollection<RawTelemetry>(dbSettings.RawTelemetryCollectionName)
-                            .Find(x => x.BatchTimestamp >= startTime && x.SensorId == query.SensorId)
+                            .Find(x => x.BatchTimestamp >= startTime)
                             .ToListAsync();
 
             return results

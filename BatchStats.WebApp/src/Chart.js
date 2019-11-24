@@ -36,16 +36,18 @@ function tooltipContent(ys) {
   };
 }
 
-class LineAndScatterChart extends React.Component {
+class LineChart extends React.Component {
   render() {
     const { data: initialData, type, width, ratio } = this.props;
+
     const xScaleProvider = discontinuousTimeScaleProvider.inputDateAccessor(
       d => d.batchStartTime
     );
+    
     const { data, xScale, xAccessor, displayXAccessor } = xScaleProvider(
       initialData
     );
-    const xExtents = [xAccessor(last(data)), xAccessor(data[Math.max(0, data.length - 20)])];
+    const xExtents = [xAccessor(last(data)), xAccessor(data[0])];
 
     const ema50 = ema()
       .id(2)
@@ -70,12 +72,12 @@ class LineAndScatterChart extends React.Component {
         xScale={xScale}
         xExtents={xExtents}
       >
-        <Chart id={1} yExtents={d => [d.average, d.standardDeviation]}>
+        <Chart id={1} yExtents={d => [d.average, d.standardDeviation ]}>
           <XAxis
             axisAt="bottom"
             orient="bottom"
             ticks={5}
-            tickInterval={5}
+          //  tickInterval={5}
             stroke="rgb(211, 194, 38)"
             tickStroke="rgb(211, 194, 38)"
           />
@@ -84,7 +86,7 @@ class LineAndScatterChart extends React.Component {
             orient="right"
             // tickInterval={5}
             // tickValues={[40, 60]}
-            ticks={5}
+            //ticks={5}
             stroke="rgb(211, 194, 38)"
             tickStroke="rgb(211, 194, 38)"
           />
@@ -128,16 +130,16 @@ class LineAndScatterChart extends React.Component {
   }
 }
 
-LineAndScatterChart.propTypes = {
+LineChart.propTypes = {
   data: PropTypes.array.isRequired,
   width: PropTypes.number.isRequired,
   ratio: PropTypes.number.isRequired,
   type: PropTypes.oneOf(['svg', 'hybrid']).isRequired
 };
 
-LineAndScatterChart.defaultProps = {
+LineChart.defaultProps = {
   type: 'svg'
 };
-LineAndScatterChart = fitWidth(LineAndScatterChart);
+LineChart = fitWidth(LineChart);
 
-export default LineAndScatterChart;
+export default LineChart;
