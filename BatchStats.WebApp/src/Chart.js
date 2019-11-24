@@ -76,7 +76,7 @@ class LineChart extends React.Component {
           <XAxis
             axisAt="bottom"
             orient="bottom"
-            ticks={5}
+            //ticks={5}
           //  tickInterval={5}
             stroke="rgb(211, 194, 38)"
             tickStroke="rgb(211, 194, 38)"
