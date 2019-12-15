@@ -9,14 +9,14 @@ using System.Threading.Tasks;
 
 namespace BatchStats.Core.Queries
 {
-    public class GetCaclDataQuery : IQuery<CalcData[]>
+    public class GetAggregatedDataQuery : IQuery<CalcData[]>
     {
-        public DateTimeOffset StartTime { get; set; }
-
         public string SensorId { get; set; }
+
+        public int Limit { get; set; }
     }
 
-    public class GetCalcDataQueryHandler : IQueryHandler<GetCaclDataQuery, CalcData[]>
+    public class GetCalcDataQueryHandler : IQueryHandler<GetAggregatedDataQuery, CalcData[]>
     {
         private readonly IDbSettings dbSettings;
         private readonly IMongoDatabase db;
@@ -27,12 +27,12 @@ namespace BatchStats.Core.Queries
             this.db = db;
         }
 
-        public async Task<CalcData[]> HandleAsync(GetCaclDataQuery query)
+        public async Task<CalcData[]> HandleAsync(GetAggregatedDataQuery query)
         {
-            long startTime = query.StartTime.ToUnixTimeSeconds();
-
             var results = await db.GetCollection<Aggregation>(dbSettings.AggregationsCollectionName)
-                            .Find(x => x.BatchStartTime >= startTime && x.SensorId.ToLower() == query.SensorId.ToLower())
+                            .Find(x => x.SensorId.ToLower() == query.SensorId.ToLower())
+                            .SortBy(x => x.BatchStartTime)
+                            .Limit(query.Limit)
                             .ToListAsync();
 
             return results

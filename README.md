@@ -15,7 +15,7 @@ An API used to push sensors data, perform calculations and fetch aggregated batc
 - [WS /hub/aggregations](https://batchstatsapi.azurewebsites.net/hub/aggregations) - subscribe to batch aggregation updates
 - [POST /sensors/telemetry](https://batchstatsapi.azurewebsites.net/sensors/telemetry) - push sensors telemetry
 
-Both raw and aggregated historical data is retrieved for last 7 days - to decrease response payload without implementing chunked fetch.
+Last 50000 entries for both raw and aggregated historical data are retrieved - to decrease response payload without implementing chunked fetch.
 
 ### Generate sensors data
 

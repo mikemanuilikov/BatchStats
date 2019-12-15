@@ -3,7 +3,6 @@ using BatchStats.Core.Interfaces;
 using BatchStats.Core.Options;
 using BatchStats.Models;
 using MongoDB.Driver;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,7 +10,7 @@ namespace BatchStats.Core.Queries
 {
     public class GetRawDataQuery : IQuery<DataPoint[]>
     {
-        public DateTimeOffset StartTime { get; set; }
+        public int Limit { get; set; }
     }
 
     public class GetRawDataQueryHandler : IQueryHandler<GetRawDataQuery, DataPoint[]>
@@ -27,10 +26,10 @@ namespace BatchStats.Core.Queries
 
         public async Task<DataPoint[]> HandleAsync(GetRawDataQuery query)
         {
-            long startTime = query.StartTime.ToUnixTimeSeconds();
-
             var results = await db.GetCollection<RawTelemetry>(dbSettings.RawTelemetryCollectionName)
-                            .Find(x => x.BatchTimestamp >= startTime)
+                            .Find(x => x.Id != null) // dummy check, api lacks "FindAll" query 
+                            .SortBy(x => x.BatchTimestamp)
+                            .Limit(query.Limit)
                             .ToListAsync();
 
             return results

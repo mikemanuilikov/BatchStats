@@ -1,11 +1,11 @@
-﻿using BatchStats.Core.Commands;
-using BatchStats.Core.Infrastructure;
+﻿using BatchStats.Core.Infrastructure;
 using BatchStats.Core.Interfaces;
-using BatchStats.Core.Queries;
 using BatchStats.Core.Services;
-using BatchStats.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NetCore.AutoRegisterDi;
+using System.Linq;
+using System.Reflection;
 
 namespace BatchStats.Core
 {
@@ -16,14 +16,25 @@ namespace BatchStats.Core
             services.AddTransient<IQueryDispatcher, QueryDispatcher>();
             services.AddTransient<ICommandDispatcher, CommandDispatcher>();
 
-            services.AddTransient<IQueryHandler<GetCaclDataQuery, CalcData[]>, GetCalcDataQueryHandler>();
-            services.AddTransient<IQueryHandler<GetRawDataQuery, DataPoint[]>, GetRawDataQueryHandler>();
-
-            services.AddTransient<ICommandHandler<AddTelemetryCommand>, AddTelemetryCommandHandler>();
-            services.AddTransient<ICommandHandler<AddAggregationsCommand>, AddAggregationsCommandHandler>();
-
             services.AddTransient<IBatchCachingService, BatchCachingService>();
             services.AddTransient<ICalcService, CalcService>();
+
+            AddAllCommandHandlers(services);
+            AddAllQueryHandlers(services);
+        }
+
+        private void AddAllCommandHandlers(IServiceCollection services)
+        {
+            services.RegisterAssemblyPublicNonGenericClasses(Assembly.GetAssembly(typeof(ICommandHandler<>)))
+                .Where(type => type.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(ICommandHandler<>)))
+                .AsPublicImplementedInterfaces();
+        }
+
+        private void AddAllQueryHandlers(IServiceCollection services)
+        {
+            services.RegisterAssemblyPublicNonGenericClasses(Assembly.GetAssembly(typeof(IQueryHandler<,>)))
+                .Where(type => type.GetInterfaces().Any(x => x.IsGenericType && x.GetGenericTypeDefinition() == typeof(IQueryHandler<,>)))
+                .AsPublicImplementedInterfaces();
         }
     }
 }
